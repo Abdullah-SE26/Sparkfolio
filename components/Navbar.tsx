@@ -7,8 +7,14 @@ const Navbar = async () => {
   const session = await auth();
 
   return (
+<<<<<<< HEAD
     <header className="px-5 py-3 bg-white shadow-sm font-work-sans">
       <nav className="flex justify-between items-center">
+=======
+    <header className="px-5 py-4 bg-white shadow-sm font-work-sans">
+      <nav className="flex justify-between  items-center">
+
+>>>>>>> 5a84238 (Fix bugs)
         {/* Logo */}
         <Link href="/">
           <Image
