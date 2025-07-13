@@ -7,9 +7,9 @@ const Home = async ({ searchParams }: { searchParams: { query?: string } }) => {
 
   const posts = [
     {
-      _createdAt: new Date(),
+      createdAt: new Date(),
       views: 55,
-      author: { _id: 1 },
+      author: { authorId: 1 , name: 'Abdullah'},
       id: 1,
       description: "This is a description",
       image: "/robot.jpg",

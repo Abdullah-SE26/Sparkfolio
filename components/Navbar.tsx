@@ -1,4 +1,4 @@
-import { auth, signIn, signOut } from "@/auth"; 
+import { auth, signIn, signOut } from "@/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -7,35 +7,32 @@ const Navbar = async () => {
   const session = await auth();
 
   return (
-<<<<<<< HEAD
-    <header className="px-5 py-3 bg-white shadow-sm font-work-sans">
-      <nav className="flex justify-between items-center">
-=======
-    <header className="px-5 py-4 bg-white shadow-sm font-work-sans">
-      <nav className="flex justify-between  items-center">
-
->>>>>>> 5a84238 (Fix bugs)
+    <header className="px-6 py-4 bg-white shadow-md font-work-sans">
+      <nav className="flex justify-between items-center max-w-7xl mx-auto">
         {/* Logo */}
         <Link href="/">
           <Image
             src="/logo.png"
-            alt="logo"
-            width={80}
-            height={30}
+            alt="Logo"
+            width={60}
+            height={40}
             className="mix-blend-multiply cursor-pointer"
           />
         </Link>
 
-        
-        <div className="flex items-center gap-3 text-black cursor-pointer ">
-{/* if a user exists in a sesion (session?.user) then we have to show create, logout and username  links */}
+       {/* if a user exists in a sesion (session?.user) then we have to show create, logout and username  links */}
+        <div className="flex items-center gap-4">
           {session?.user ? (
             <>
-              <Link href="/startup/create" className="font-semibold py-1 px-3 rounded-sm bg-blue-500 hover:bg-blue-600">
-                <span>Create</span>
+              {/* Create Button */}
+              <Link
+                href="/startup/create"
+                className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition"
+              >
+                Create
               </Link>
 
-              {/* Logout form */}
+              {/* Logout Form */}
               <form
                 action={async () => {
                   "use server";
@@ -43,25 +40,35 @@ const Navbar = async () => {
                   redirect("/");
                 }}
               >
-                <button type="submit" className="cursor-pointer font-semibold py-1 px-3 rounded-sm bg-red-500 hover:bg-red-600">
-                  <span>Logout</span>
+                <button
+                  type="submit"
+                  className="bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition"
+                >
+                  Logout
                 </button>
               </form>
 
-              <Link href={`/user/${session.user.id}`} className="font-bold  text-black">
-                <span>{session.user.name}</span>
+              {/* Profile */}
+              <Link
+                href={`/user/${session.user.id}`}
+                className="text-sm font-semibold text-gray-800 hover:text-black bg-gray-100 px-4 py-2 rounded-full transition"
+              >
+                {session.user.name}
               </Link>
             </>
           ) : (
             // else show Login form
-            <form 
+            <form
               action={async () => {
                 "use server";
                 await signIn("github");
               }}
             >
-              <button type="submit" className="cursor-pointer font-semibold py-1 px-3 rounded-sm bg-green-600 hover:bg-green-700">
-                <span>Login</span>
+              <button
+                type="submit"
+                className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition"
+              >
+                Login
               </button>
             </form>
           )}
@@ -72,6 +79,7 @@ const Navbar = async () => {
 };
 
 export default Navbar;
+
 
 //========================#  NOTES #=============================//
 
