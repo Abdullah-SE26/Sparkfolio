@@ -6,7 +6,8 @@ import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 
 const Home = async ({ searchParams }: { searchParams: { query?: string } }) => {
   const query = (await searchParams).query;
-  const {data : posts} = await sanityFetch({query: STARTUPS_QUERY});
+  const params = {search: query || null}
+  const {data : posts} = await sanityFetch({query: STARTUPS_QUERY, params});
 
 
   return (
