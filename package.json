@@ -9,19 +9,16 @@
     "lint": "next lint"
   },
   "packageManager": "npm@10.5.2",
-  "overrides": {
-    "react": "$react",
-    "react-dom": "$react-dom"
-  },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
-    "@sanity/client": "^7.6.0",
+    "@sanity/client": "6.29.1",
     "@sanity/image-url": "^1.1.0",
-    "@sanity/preview-kit": "^5.2.3-canary.0",
+    "@sanity/preview-kit": "5.2.9",
     "@sanity/vision": "^3.99.0",
     "@tailwindcss/typography": "^0.5.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "easymde": "^2.20.0",
     "lucide-react": "^0.525.0",
     "next": "15.3.5",
     "next-auth": "^5.0.0-beta.29",
@@ -31,6 +28,7 @@
     "react-icons": "^5.5.0",
     "react-is": "^19.1.0",
     "sanity": "^3.87.1-canary.4",
+    "sanity-plugin-markdown": "^5.1.2",
     "styled-components": "^6.1.19",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7"
