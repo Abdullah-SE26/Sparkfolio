@@ -8,7 +8,7 @@ export const author = defineType({
   icon: UserIcon,
   fields: [
     defineField({
-      name: "id",
+      name: "_id",
       type: "number",
     }),
     defineField({

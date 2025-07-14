@@ -5,12 +5,17 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     remotePatterns: [
       {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001',
+        pathname: '/**',
+      },
+      {
         protocol: 'https',
-        hostname: '*', 
+        hostname: '**', 
       },
     ],
   },
 };
 
 export default nextConfig;
-
