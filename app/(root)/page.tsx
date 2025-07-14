@@ -3,7 +3,7 @@ import HeadingBox from "../../components/HeadingsBox";
 import SearchBar from "../../components/SearchBar";
 
 const Home = async ({ searchParams }: { searchParams: { query?: string } }) => {
-  const query = searchParams.query;
+  const query = await searchParams.query;
 
   const posts = [
     {
@@ -30,7 +30,7 @@ const Home = async ({ searchParams }: { searchParams: { query?: string } }) => {
       </section>
 
       <section className="px-6 py-10 max-w-7xl mx-auto">
-        <p className="text-30-semibold">
+        <p className="text-[30px] font-semibold">
           {query ? `Search results for "${query}"` : "All Startups"}
         </p>
 
