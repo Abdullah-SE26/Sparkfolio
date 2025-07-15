@@ -3,20 +3,23 @@ import Ping from '@/components/Ping';
 import { client } from '@/sanity/lib/client';
 import { STARTUP_VIEWS_QUERY } from '@/sanity/lib/queries';
 import { EyeIcon } from 'lucide-react';
+import { writeClient } from '@/sanity/lib/write-client';
+import { after } from 'next/server';
 
 type ViewProps = {
   id: string;
 };
 
 const View = async ({ id }: ViewProps) => {
-  let totalViews = 0;
+  const {views : totalViews} = await client.withConfig({ useCdn: false }).fetch(STARTUP_VIEWS_QUERY, { id });
 
-  try {
-    const data = await client.withConfig({ useCdn: false }).fetch(STARTUP_VIEWS_QUERY, { id });
-    totalViews = data?.views || 0;
-  } catch (error) {
-    console.error('Error fetching views:', error);
-  }
+  after(async () =>
+     await writeClient
+  .patch(id)
+  .set({views : totalViews +1})
+  .commit ()
+  )
+ 
 
   return (
     <div className="fixed bottom-3 right-3 bg-pink-200 px-2 py-2 rounded-2xl flex items-center gap-3 shadow-lg min-w-[100px]">
