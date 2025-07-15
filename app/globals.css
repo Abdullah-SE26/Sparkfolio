@@ -132,3 +132,6 @@
     background-position: center;
     background-repeat: repeat-x;
   }
+.input-style {
+  @apply border-2 border-black px-5 py-4 text-base font-medium rounded-full placeholder:text-black/50 focus-visible:outline-ring focus-visible:ring-2;
+}
