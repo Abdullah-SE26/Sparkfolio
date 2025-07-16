@@ -6,7 +6,7 @@ import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 import { auth } from "@/auth";
 
 const Home = async ({ searchParams }: { searchParams: { query?: string } }) => {
-  const query = (await searchParams).query;
+  const query = searchParams.query;
   const params = {search: query || null}
 
   const session = await auth()

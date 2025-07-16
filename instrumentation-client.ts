@@ -1,30 +1,36 @@
-// This file configures the initialization of Sentry on the client.
-// The added config here will be used whenever a users loads a page in their browser.
-// https://docs.sentry.io/platforms/javascript/guides/nextjs/
+import * as Sentry from '@sentry/nextjs';
 
-import * as Sentry from "@sentry/nextjs";
+const REPLAY_INIT_FLAG = '__SENTRY_REPLAY_INIT__';
 
-Sentry.init({
-  dsn: "https://99a51cbb60fe4500038402817f62f135@o4509672760410112.ingest.de.sentry.io/4509672763883600",
+declare global {
+  interface Window {
+    [REPLAY_INIT_FLAG]?: boolean;
+  }
+}
 
-  // Add optional integrations for additional features
-  integrations: [
-    Sentry.replayIntegration(),
-  ],
+if (typeof window !== 'undefined') {
+  if (window[REPLAY_INIT_FLAG]) {
+    console.warn('Sentry Replay is already initialized.');
+  } else {
+    window[REPLAY_INIT_FLAG] = true;
 
-  // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 1,
-
-  // Define how likely Replay events are sampled.
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
-  replaysSessionSampleRate: 0.1,
-
-  // Define how likely Replay events are sampled when an error occurs.
-  replaysOnErrorSampleRate: 1.0,
-
-  // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
-});
+    Sentry.init({
+      dsn: 'https://99a51cbb60fe4500038402817f62f135@o4509672760410112.ingest.de.sentry.io/4509672763883600', // replace with your DSN
+      integrations: [
+        Sentry.replayIntegration(),
+        Sentry.feedbackIntegration({
+          colorScheme: 'system',
+          buttonOptions: {
+            position: 'bottom-right', // or your preferred position
+          },
+        }),
+      ],
+      tracesSampleRate: 1.0,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
+      debug: false,
+    });
+  }
+}
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
