@@ -65,7 +65,7 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
         <img
           src={image}
           alt="Startup"
-          className="w-full h-[164px] object-fit rounded-xl transition-transform hover:scale-[1.01]"
+          className="w-full h-[164px] object-fill rounded-xl transition-transform hover:scale-[1.01]"
         />
       </Link>
 

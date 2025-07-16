@@ -67,9 +67,9 @@ console.log("editorPlaylist:", editorPlaylist);
         <Image
           src={post.image || "/fallback.jpg"}
           alt="thumbnail"
-          width={1000}
+          width={500}
           height={700}
-          className="w-full aspect-video object-cover rounded-xl"
+          className="w-full aspect-video object-fit rounded-xl"
         />
 
         <div className="space-y-5 mt-10 max-w-4xl mx-auto">
