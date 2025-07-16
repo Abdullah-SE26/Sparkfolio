@@ -1,12 +1,13 @@
-import { formatDate } from '@/lib/utils'
-import { EyeIcon } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import React from 'react'
-import { Button } from './ui/button'
-import { Author, Startup } from '@/sanity/types'
+import React from 'react';
+import { cn, formatDate } from '@/lib/utils';
+import { EyeIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Button } from './ui/button';
+import { Skeleton } from './ui/skeleton';
+import { Author, Startup } from '@/sanity/types';
 
-export type StartupTypeCard = Omit<Startup,'author'> & {author?: Author};
+export type StartupTypeCard = Omit<Startup, 'author'> & { author?: Author };
 
 const StartupCard = ({ post }: { post: StartupTypeCard }) => {
   const {
@@ -29,13 +30,13 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
         </p>
         <div className="flex items-center gap-2">
           <EyeIcon className="w-5 h-5 text-primary" />
-          <span className="text-sm font-medium">{views}</span>
+          <span className="text-sm font-medium">{views ?? 0}</span>
         </div>
       </div>
 
       {/* Author Info */}
       <div className="flex items-center gap-3 mb-4">
-        <Link href={`/users/${author?._id}`}>
+        <Link href={`/user/${author?._id}`}>
           <Image
             src={author?.image || '/default-avatar.png'}
             alt={author?.name || 'Author'}
@@ -44,32 +45,37 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
             className="rounded-full object-cover"
           />
         </Link>
-        <Link href={`/users/${author?._id}`}>
-          <p className="text-[15px] font-medium text-black line-clamp-1">{author?.name}</p>
+        <Link href={`/user/${author?._id}`}>
+          <p className="text-[15px] font-medium text-black line-clamp-1">
+            {author?.name ?? 'Unknown'}
+          </p>
         </Link>
       </div>
 
       {/* Title */}
       <Link href={`/startup/${_id}`}>
-        <h3 className="text-xl font-semibold text-black line-clamp-1 mb-2 hover:underline">{title}</h3>
+        <h3 className="text-xl font-semibold text-black line-clamp-1 mb-2 hover:underline">
+          {title}
+        </h3>
       </Link>
 
-      {/* Description & Startup Image */}
+      {/* Description & Image */}
       <Link href={`/startup/${_id}`}>
         <p className="text-sm text-gray-600 line-clamp-2 mb-3">{description}</p>
         <img
           src={image}
           alt="Startup"
-          className="w-full h-[164px] object-cover rounded-xl transition-transform hover:scale-[1.01]"
+          className="w-full h-[164px] object-fit rounded-xl transition-transform hover:scale-[1.01]"
         />
       </Link>
 
-      {/* Category and Button */}
+      {/* Category & Button */}
       <div className="flex items-center justify-between mt-5">
         <Link href={`/?query=${category?.toLowerCase()}`}>
-          <p className="text-sm font-medium text-primary hover:underline">{category}</p>
+          <p className="text-sm font-medium text-primary hover:underline">
+            {category}
+          </p>
         </Link>
-
         <Button
           className="rounded-full bg-black text-white text-sm px-5 py-2.5 hover:bg-primary transition-colors"
           asChild
@@ -80,5 +86,15 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
     </li>
   );
 };
+
+export const StartupCardSkeleton = () => (
+  <>
+    {[0, 1, 2, 3, 4].map((index: number) => (
+      <li key={cn('skeleton', index)}>
+        <Skeleton className="startup-card_skeleton" />
+      </li>
+    ))}
+  </>
+);
 
 export default StartupCard;

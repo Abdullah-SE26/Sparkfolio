@@ -41,7 +41,7 @@ export const startup = defineType({
       validation: (Rule) => Rule.required().error('Please upload an image')
     }),
      defineField({
-      name: "Pitch",
+      name: "pitch",
       type: "markdown",
     }),
   ],

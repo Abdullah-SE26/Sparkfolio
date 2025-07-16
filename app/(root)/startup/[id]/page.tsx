@@ -1,13 +1,17 @@
-import { formatDate } from '@/lib/utils';
-import { client } from '@/sanity/lib/client';
-import { STARTUPS_BY_ID_QUERY } from '@/sanity/lib/queries';
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import markdownit from 'markdown-it';
-import { Suspense } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import View from '@/components/View';
+import { formatDate } from "@/lib/utils";
+import { client } from "@/sanity/lib/client";
+import {
+  PLAYLIST_BY_SLUG_QUERY,
+  STARTUPS_BY_ID_QUERY,
+} from "@/sanity/lib/queries";
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import markdownit from "markdown-it";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import View from "@/components/View";
+import StartupCard, { StartupTypeCard } from "@/components/StartupCard";
 
 const md = markdownit();
 
@@ -22,21 +26,30 @@ type PageProps = {
 const Page = async ({ params }: PageProps) => {
   const id = params.id;
 
-  const post = await client.fetch(STARTUPS_BY_ID_QUERY, { id });
+  const [post, editorPlaylist] = await Promise.all([
+    client.fetch(STARTUPS_BY_ID_QUERY, { id }),
+    client.fetch(PLAYLIST_BY_SLUG_QUERY, { slug: "editor-picks" }),
+  ]);
+
+  console.log("post data:", post);
+console.log("editorPlaylist:", editorPlaylist);
 
   if (!post) return notFound();
 
-  const parsedContent = md.render(post?.pitch || '');
+  const parsedContent = md.render(post?.pitch || "");
+  const editorPosts = editorPlaylist?.select || [];
 
   return (
     <div>
       {/* Header Section */}
       <section className="min-h-[230px] w-full bg-primary pattern flex justify-center items-center flex-col py-10 px-6">
-        <p className="bg-blue-400 px-6 py-3 font-work-sans font-bold rounded-sm uppercase relative 
-          before:content-[''] before:absolute before:top-2 before:left-2 
-          before:border-t-[10px] before:border-t-black before:border-r-[10px] before:border-r-transparent 
-          after:content-[''] after:absolute after:bottom-2 after:right-2 
-          after:border-b-[10px] after:border-b-black after:border-l-[10px] after:border-l-transparent">
+        <p
+          className="bg-blue-400 px-6 py-3 font-work-sans font-bold rounded-sm uppercase relative 
+            before:content-[''] before:absolute before:top-2 before:left-2 
+            before:border-t-[10px] before:border-t-black before:border-r-[10px] before:border-r-transparent 
+            after:content-[''] after:absolute after:bottom-2 after:right-2 
+            after:border-b-[10px] after:border-b-black after:border-l-[10px] after:border-l-transparent"
+        >
           {formatDate(post?._createdAt)}
         </p>
 
@@ -52,22 +65,22 @@ const Page = async ({ params }: PageProps) => {
       {/* Content Section */}
       <section className="px-6 py-10 max-w-7xl mx-auto">
         <Image
-          src={post.image || '/fallback.jpg'}
+          src={post.image || "/fallback.jpg"}
           alt="thumbnail"
-          width={1200}
+          width={1000}
           height={700}
-          className="w-full h-auto rounded-xl"
+          className="w-full aspect-video object-cover rounded-xl"
         />
 
         <div className="space-y-5 mt-10 max-w-4xl mx-auto">
           {/* Author Info & Category */}
           <div className="flex justify-between items-start flex-wrap gap-5">
             <Link
-              href={`/users/${post.author?._id}`}
+              href={`/user/${post.author?._id}`}
               className="flex gap-2 items-center mb-3"
             >
               <Image
-                src={post.author?.image || '/default-avatar.png'}
+                src={post.author?.image || "/default-avatar.png"}
                 alt="avatar"
                 width={64}
                 height={64}
@@ -88,29 +101,43 @@ const Page = async ({ params }: PageProps) => {
 
           {/* Pitch Content */}
           <h3 className="text-30-bold">Pitch Details</h3>
-          {parsedContent ? (
-            <article
-              className="prose max-w-4xl break-all"
-              dangerouslySetInnerHTML={{ __html: parsedContent }}
-            />
-          ) : (
-            <p className="text-black-100 text-sm font-normal">
-              No details provided
-            </p>
-          )}
+{post.pitch ? (
+  <article
+    className="prose max-w-4xl break-words"
+    dangerouslySetInnerHTML={{ __html: parsedContent }}
+  />
+) : (
+  <p className="text-black-100 text-sm font-normal">
+    No details provided
+  </p>
+)}
+
         </div>
 
         <hr className="border-dotted bg-zinc-400 max-w-4xl my-10 mx-auto" />
-      </section>
 
-      {/* Views Tracker */}
-      <Suspense
-        fallback={
-          <Skeleton className="bg-zinc-400 h-10 w-24 rounded-lg fixed bottom-3 right-3" />
-        }
-      >
-        <View id={id} />
-      </Suspense>
+        {/* Editor Picks */}
+        {editorPosts.length > 0 && (
+          <div className="max-w-4xl mx-auto">
+            <p className="text-30-semibold">Editor Picks</p>
+
+            <ul className="mt-7 grid sm:grid-cols-2 gap-5">
+              {editorPosts.map((post: StartupTypeCard, i: number) => (
+                <StartupCard key={i} post={post} />
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* Views Tracker */}
+        <Suspense
+          fallback={
+            <Skeleton className="bg-zinc-400 h-10 w-24 rounded-lg fixed bottom-3 right-3" />
+          }
+        >
+          <View id={id} />
+        </Suspense>
+      </section>
     </div>
   );
 };

@@ -19,7 +19,7 @@ const View = async ({ id }: ViewProps) => {
   );
 
   return (
-    <div className="fixed bottom-20 right-8 bg-pink-200 bg-opacity-90 px-4 py-2 rounded-2xl flex items-center gap-2 shadow-lg min-w-[110px] transition duration-300 hover:bg-pink-300 cursor-default">
+    <div className="fixed bottom-20 right-8 bg-pink-200 bg-opacity-90 px-4 py-2 rounded-2xl flex items-center gap-2 shadow-lg min-w-[100px] transition duration-300 hover:bg-pink-300 cursor-default">
       <Ping />
       <span className="text-black text-sm font-semibold leading-none">Views: {totalViews}</span>
     </div>
