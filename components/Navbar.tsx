@@ -17,14 +17,16 @@ const Navbar = async () => {
 
           {/* Logo */}
           <Link href="/">
-            <Image
-              src="/logo.png"
-              alt="Logo"
-              width={60}
-              height={40}
-              className="mix-blend-multiply cursor-pointer"
-            />
-          </Link>
+  <Image
+    src="/logo.png"
+    alt="Logo"
+    width={60}
+    height={40}
+    className="mix-blend-multiply cursor-pointer"
+    style={{ width: 'auto', height: 'auto' }} 
+  />
+</Link>
+
         </div>
 
         {/* if a user exists in a session (session?.user) then we have to show create, logout and username links */}

@@ -6,7 +6,7 @@ import slugify from "slugify";
 import { writeClient } from "@/sanity/lib/write-client";
 
 export const createPitch = async (
-  state: any,
+  state: unknown,
   form: FormData,
   pitch: string,
 ) => {
@@ -26,25 +26,29 @@ export const createPitch = async (
 
   try {
     const startup = {
-      title,
-      description,
-      category,
-      image: link,
-      slug: {
-        _type: slug,
-        current: slug,
-      },
-      author: {
-        _type: "reference",
-        _ref: session?.id,
-      },
-      pitch,
-    };
+  title,
+  description,
+  category,
+  image: link, // Make sure this is a valid URL string
+  slug: {
+    _type: "slug",
+    current: slug,
+  },
+  author: {
+    _type: "reference",
+    _ref: session.id, // Your session user ID
+  },
+  pitch: {
+    _type: "markdown",
+    markdown: pitch, // wrap pitch string here
+  },
+};
+
 
     const result = await writeClient.create({ _type: "startup", ...startup });
 
     return parseServerActionResponse({
-      ...result,
+      ...result, // contains _id and slug.current
       error: "",
       status: "SUCCESS",
     });

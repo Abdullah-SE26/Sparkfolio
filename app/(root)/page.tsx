@@ -5,12 +5,18 @@ import { STARTUPS_QUERY } from "@/sanity/lib/queries";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 import { auth } from "@/auth";
 
-const Home = async ({ searchParams }: { searchParams: { query?: string } }) => {
-  const query = searchParams.query;
-  const params = {search: query || null}
 
-  const session = await auth()
-   console.log(session?.id);
+interface HomeProps {
+  searchParams?: { query?: string }
+}
+
+const Home = async ({ searchParams }: HomeProps) => {
+  const query = searchParams?.query ?? null;
+  const params = { search: query };
+
+  const session = await auth();
+
+   
   const {data : posts} = await sanityFetch({query: STARTUPS_QUERY, params});
 
 
@@ -22,7 +28,7 @@ const Home = async ({ searchParams }: { searchParams: { query?: string } }) => {
           subheading="Turn your vision into traction — one pitch at a time."
         />
 
-        <SearchBar query={query} />
+        <SearchBar query={query ?? undefined} />
       </section>
 
       <section className="px-6 py-10 max-w-7xl mx-auto">

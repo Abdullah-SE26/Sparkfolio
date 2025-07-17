@@ -48,7 +48,7 @@ export type Startup = {
   description?: string;
   category?: string;
   image?: string;
-  Pitch?: string;
+  pitch?: string;
 };
 
 export type Author = {

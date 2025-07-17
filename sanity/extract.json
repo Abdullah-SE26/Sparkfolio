@@ -203,7 +203,7 @@
         },
         "optional": true
       },
-      "Pitch": {
+      "pitch": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

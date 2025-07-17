@@ -8,15 +8,17 @@ import { Button } from "@/components/ui/button";
 import { Send, Loader2 } from "lucide-react";
 import { formSchema } from "@/lib/validation";
 import { z } from "zod";
-import { useToast } from "@/Hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { createPitch } from "@/lib/action";
 
 const StartupForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [pitch, setPitch] = useState("");
+  const [pitch, setPitch] = useState(""); // Controlled only for markdown editor
+
   const { toast } = useToast();
   const router = useRouter();
+
   const errorRefs = {
     title: useRef<HTMLInputElement>(null),
     description: useRef<HTMLTextAreaElement>(null),
@@ -26,27 +28,33 @@ const StartupForm = () => {
 
   const handleFormSubmit = async (
     prevState: { error: string; status: string },
-    formData: FormData
+    formDataObj: FormData
   ) => {
     try {
+      // Extract fields from formDataObj (not local state)
       const formValues = {
-        title: formData.get("title") as string,
-        description: formData.get("description") as string,
-        category: formData.get("category") as string,
-        link: formData.get("link") as string,
-        pitch,
+        title: formDataObj.get("title") as string,
+        description: formDataObj.get("description") as string,
+        category: formDataObj.get("category") as string,
+        link: formDataObj.get("link") as string,
+        pitch, // pitch is controlled state
       };
 
       await formSchema.parseAsync(formValues);
 
-      const result = await createPitch(prevState, formData, pitch);
+      const result = await createPitch(prevState, formDataObj, pitch);
 
       if (result.status === "SUCCESS") {
         toast({
           title: "✅ Success",
           description: "Your startup pitch has been created.",
         });
-        router.push(`/startup/${result._id}`);
+
+        router.push(`/startup/${result.slug.current}`);
+
+        // Reset pitch only (inputs are uncontrolled, so no reset needed)
+        setPitch("");
+        setErrors({});
       }
 
       return result;
@@ -88,26 +96,6 @@ const StartupForm = () => {
     status: "INITIAL",
   });
 
-  const Field = ({
-    id,
-    label,
-    children,
-    error,
-  }: {
-    id: string;
-    label: string;
-    children: React.ReactNode;
-    error?: string;
-  }) => (
-    <div className="space-y-2">
-      <label htmlFor={id} className="text-lg text-black font-semibold uppercase">
-        {label}
-      </label>
-      {children}
-      {error && <p className="text-red-600 text-sm ml-2">{error}</p>}
-    </div>
-  );
-
   return (
     <form
       action={formAction}
@@ -121,6 +109,7 @@ const StartupForm = () => {
           required
           placeholder="Startup Title"
           className="input-style"
+          // No value or onChange here to keep uncontrolled input
         />
       </Field>
 
@@ -132,6 +121,7 @@ const StartupForm = () => {
           required
           placeholder="Startup Description"
           className="input-style"
+          // Uncontrolled too
         />
       </Field>
 
@@ -143,6 +133,7 @@ const StartupForm = () => {
           required
           placeholder="e.g. Tech, Health, Education..."
           className="input-style"
+          // Uncontrolled
         />
       </Field>
 
@@ -154,6 +145,7 @@ const StartupForm = () => {
           required
           placeholder="Startup Image URL"
           className="input-style"
+          // Uncontrolled
         />
       </Field>
 
@@ -194,5 +186,25 @@ const StartupForm = () => {
     </form>
   );
 };
+
+const Field = ({
+  id,
+  label,
+  children,
+  error,
+}: {
+  id: string;
+  label: string;
+  children: React.ReactNode;
+  error?: string;
+}) => (
+  <div className="space-y-2">
+    <label htmlFor={id} className="text-lg text-black font-semibold uppercase">
+      {label}
+    </label>
+    {children}
+    {error && <p className="text-red-600 text-sm ml-2">{error}</p>}
+  </div>
+);
 
 export default StartupForm;
