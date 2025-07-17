@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useRef } from "react";
@@ -50,7 +49,7 @@ const StartupForm = () => {
       // Validate the form data
       await formSchema.parseAsync(formValues);
 
-      const result = await createPitch({}, formData);
+      const result = await createPitch(formData);
 
       if (result.status === "SUCCESS") {
         toast({
