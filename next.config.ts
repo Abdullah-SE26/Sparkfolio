@@ -49,4 +49,3 @@ const sentryWebpackPluginOptions = {
 const withAnalyzer = bundleAnalyzer(nextConfig);
 
 export default withSentryConfig(withAnalyzer, sentryWebpackPluginOptions);
-```
