@@ -18,7 +18,7 @@ const Navbar = async () => {
           {/* Logo */}
           <Link href="/">
   <Image
-    src="/logo.png"
+    src="favicon.ico"
     alt="Logo"
     width={60}
     height={40}
