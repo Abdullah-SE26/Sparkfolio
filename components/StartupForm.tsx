@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useActionState } from "react";
+import React, { useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import MDEditor from "@uiw/react-md-editor";
@@ -14,10 +14,12 @@ import { createPitch } from "@/lib/action";
 
 const StartupForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [pitch, setPitch] = useState(""); // Controlled only for markdown editor
+  const [pitch, setPitch] = useState("");
+  const [isPending, setIsPending] = useState(false);
 
   const { toast } = useToast();
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const errorRefs = {
     title: useRef<HTMLInputElement>(null),
@@ -26,79 +28,90 @@ const StartupForm = () => {
     link: useRef<HTMLInputElement>(null),
   };
 
-  const handleFormSubmit = async (
-    prevState: { error: string; status: string },
-    formDataObj: FormData
-  ) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsPending(true);
+    setErrors({});
+
+    const formData = new FormData(e.currentTarget);
+    formData.set("pitch", pitch);
+
     try {
-      // Extract fields from formDataObj (not local state)
       const formValues = {
-        title: formDataObj.get("title") as string,
-        description: formDataObj.get("description") as string,
-        category: formDataObj.get("category") as string,
-        link: formDataObj.get("link") as string,
-        pitch, // pitch is controlled state
+        title: formData.get("title") as string,
+        description: formData.get("description") as string,
+        category: formData.get("category") as string,
+        link: formData.get("link") as string,
+        pitch: formData.get("pitch") as string,
       };
 
       await formSchema.parseAsync(formValues);
 
-      const result = await createPitch(prevState, formDataObj, pitch);
+      const result = await createPitch({}, formData);
 
       if (result.status === "SUCCESS") {
         toast({
           title: "✅ Success",
-          description: "Your startup pitch has been created.",
+          description: "Your startup pitch has been created successfully!",
+          duration : 4000,
         });
 
-        router.push(`/startup/${result.slug.current}`);
-
-        // Reset pitch only (inputs are uncontrolled, so no reset needed)
+        formRef.current?.reset();
         setPitch("");
         setErrors({});
+        router.push(`/startup/${result._id}`);
+      } else {
+        toast({
+          title: "❌ Error",
+          description: result.error || "Failed to create startup pitch",
+          variant: "destructive",
+          duration : 4000,
+        });
       }
-
-      return result;
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldErrors = error.flatten().fieldErrors;
-        const formattedErrors = fieldErrors as unknown as Record<string, string>;
+        const formattedErrors: Record<string, string> = {};
+
+        Object.keys(fieldErrors).forEach((key) => {
+          const errorArray = fieldErrors[key as keyof typeof fieldErrors];
+          if (errorArray && errorArray.length > 0) {
+            formattedErrors[key] = errorArray[0];
+          }
+        });
+
         setErrors(formattedErrors);
 
         const firstErrorKey = Object.keys(formattedErrors)[0];
-        const firstErrorRef = errorRefs[firstErrorKey as keyof typeof errorRefs];
-        firstErrorRef?.current?.scrollIntoView({ behavior: "smooth" });
+        const firstErrorRef =
+          errorRefs[firstErrorKey as keyof typeof errorRefs];
+        if (firstErrorRef?.current) {
+          firstErrorRef.current.scrollIntoView({ behavior: "smooth" });
+          firstErrorRef.current.focus();
+        }
 
         toast({
           title: "⚠️ Validation Error",
           description: "Please fix the highlighted fields.",
           variant: "destructive",
         });
-
-        return { ...prevState, error: "Validation failed", status: "ERROR" };
+      } else {
+        console.error("Unexpected error:", error);
+        toast({
+          title: "❌ Unexpected Error",
+          description: "Something went wrong. Please try again later.",
+          variant: "destructive",
+        });
       }
-
-      toast({
-        title: "❌ Unexpected Error",
-        description: "Something went wrong. Please try again later.",
-        variant: "destructive",
-      });
-
-      return {
-        ...prevState,
-        error: "Unexpected error",
-        status: "ERROR",
-      };
+    } finally {
+      setIsPending(false);
     }
   };
 
-  const [state, formAction, isPending] = useActionState(handleFormSubmit, {
-    error: "",
-    status: "INITIAL",
-  });
-
   return (
     <form
-      action={formAction}
+      ref={formRef}
+      onSubmit={handleSubmit}
       className="max-w-2xl mx-auto bg-white p-8 mt-10 rounded-xl border border-zinc-200 shadow-md space-y-8"
     >
       <Field id="title" label="Title" error={errors.title}>
@@ -109,7 +122,6 @@ const StartupForm = () => {
           required
           placeholder="Startup Title"
           className="input-style"
-          // No value or onChange here to keep uncontrolled input
         />
       </Field>
 
@@ -121,7 +133,6 @@ const StartupForm = () => {
           required
           placeholder="Startup Description"
           className="input-style"
-          // Uncontrolled too
         />
       </Field>
 
@@ -133,7 +144,6 @@ const StartupForm = () => {
           required
           placeholder="e.g. Tech, Health, Education..."
           className="input-style"
-          // Uncontrolled
         />
       </Field>
 
@@ -145,7 +155,6 @@ const StartupForm = () => {
           required
           placeholder="Startup Image URL"
           className="input-style"
-          // Uncontrolled
         />
       </Field>
 
@@ -157,9 +166,14 @@ const StartupForm = () => {
             id="pitch"
             preview="edit"
             height={300}
-            style={{ borderRadius: 16, border: "1px solid #ccc", overflow: "hidden" }}
+            style={{
+              borderRadius: 16,
+              border: "1px solid #ccc",
+              overflow: "hidden",
+            }}
             textareaProps={{
-              placeholder: "Briefly describe your idea and what problem it solves",
+              placeholder:
+                "Briefly describe your idea and what problem it solves",
             }}
             previewOptions={{
               disallowedElements: ["style"],

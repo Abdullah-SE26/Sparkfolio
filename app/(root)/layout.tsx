@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import Navbar from "../../components/Navbar";
 
 const Layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
@@ -6,6 +7,7 @@ const Layout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
       <Navbar />
 
       {children}
+      <Toaster position="bottom-right" />
     </main>
   );
 };

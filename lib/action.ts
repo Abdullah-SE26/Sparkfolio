@@ -6,9 +6,8 @@ import slugify from "slugify";
 import { writeClient } from "@/sanity/lib/write-client";
 
 export const createPitch = async (
-  state: unknown,
-  form: FormData,
-  pitch: string,
+  state: any,
+  form: FormData
 ) => {
   const session = await auth();
 
@@ -22,38 +21,40 @@ export const createPitch = async (
     Array.from(form).filter(([key]) => key !== "pitch"),
   );
 
+  const pitch = form.get("pitch") as string; // ✅ Move this up
+
   const slug = slugify(title as string, { lower: true, strict: true });
 
   try {
     const startup = {
-  title,
-  description,
-  category,
-  image: link, // Make sure this is a valid URL string
-  slug: {
-    _type: "slug",
-    current: slug,
-  },
-  author: {
-    _type: "reference",
-    _ref: session.id, // Your session user ID
-  },
-  pitch: {
-    _type: "markdown",
-    markdown: pitch, // wrap pitch string here
-  },
-};
+      _type: "startup",
+      title,
+      description,
+      category,
+      image: link, // Ensure this is a valid image URL
+      slug: {
+        _type: "slug",
+        current: slug,
+      },
+      author: {
+        _type: "reference",
+        _ref: session.id, // Make sure session.id is your Sanity user ID
+      },
+      pitch: {
+        _type: "markdown",
+        markdown: pitch,
+      },
+    };
 
-
-    const result = await writeClient.create({ _type: "startup", ...startup });
+    const result = await writeClient.create(startup);
 
     return parseServerActionResponse({
-      ...result, // contains _id and slug.current
+      ...result,
       error: "",
       status: "SUCCESS",
     });
   } catch (error) {
-    console.log(error);
+    console.log("❌ Sanity write error:", error);
 
     return parseServerActionResponse({
       error: JSON.stringify(error),

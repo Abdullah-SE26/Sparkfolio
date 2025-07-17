@@ -31,12 +31,11 @@ const Page = async ({ params }: PageProps) => {
     client.fetch(PLAYLIST_BY_SLUG_QUERY, { slug: "editor-picks" }),
   ]);
 
-  console.log("post data:", post);
-console.log("editorPlaylist:", editorPlaylist);
+ 
 
   if (!post) return notFound();
 
-  const parsedContent = md.render(post?.pitch || "");
+  const parsedContent = md.render(post?.pitch?.markdown || "");
   const editorPosts = editorPlaylist?.select || [];
 
   return (
@@ -67,10 +66,11 @@ console.log("editorPlaylist:", editorPlaylist);
         <Image
           src={post.image || "/fallback.jpg"}
           alt="thumbnail"
-          width={500}
-          height={700}
-          className="w-full aspect-video object-fit rounded-xl"
+          width={1280}
+          height={720}
+          className="w-full max-h-[500px] object-cover rounded-xl"
         />
+
 
         <div className="space-y-5 mt-10 max-w-4xl mx-auto">
           {/* Author Info & Category */}
