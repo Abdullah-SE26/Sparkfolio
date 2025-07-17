@@ -8,6 +8,8 @@ import { writeClient } from "@/sanity/lib/write-client";
 export const createPitch = async (
   state: any,
   form: FormData
+  state: any,
+  form: FormData
 ) => {
   const session = await auth();
 

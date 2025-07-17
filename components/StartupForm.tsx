@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useRef } from "react";
@@ -21,6 +22,7 @@ const StartupForm = () => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
 
+  const formRef = useRef<HTMLFormElement>(null);
   const errorRefs = {
     title: useRef<HTMLInputElement>(null),
     description: useRef<HTMLTextAreaElement>(null),
@@ -45,6 +47,7 @@ const StartupForm = () => {
         pitch: formData.get("pitch") as string,
       };
 
+      // Validate the form data
       await formSchema.parseAsync(formValues);
 
       const result = await createPitch({}, formData);
@@ -82,6 +85,7 @@ const StartupForm = () => {
 
         setErrors(formattedErrors);
 
+        // Scroll to first error
         const firstErrorKey = Object.keys(formattedErrors)[0];
         const firstErrorRef =
           errorRefs[firstErrorKey as keyof typeof errorRefs];

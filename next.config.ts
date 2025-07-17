@@ -3,7 +3,7 @@ import type { NextConfig } from 'next';
 import withBundleAnalyzer from '@next/bundle-analyzer';
 
 const bundleAnalyzer = withBundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true', // Enable with env variable
+  enabled: process.env.ANALYZE === 'true',
 });
 
 const nextConfig: NextConfig = {
@@ -28,20 +28,25 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@sanity/client'],
+  },
+  server: {
+    host: '0.0.0.0',
+    port: 3000,
+  },
 };
 
 const sentryWebpackPluginOptions = {
   org: 'abdullah-sh',
   project: 'javascript-nextjs',
-
   silent: !process.env.CI,
   widenClientFileUpload: true,
   disableLogger: true,
   automaticVercelMonitors: true,
 };
 
-// Wrap nextConfig with bundle analyzer first
 const withAnalyzer = bundleAnalyzer(nextConfig);
 
-// Then wrap with Sentry
 export default withSentryConfig(withAnalyzer, sentryWebpackPluginOptions);
+```
