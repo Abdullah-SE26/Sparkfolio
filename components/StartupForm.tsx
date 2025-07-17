@@ -22,7 +22,7 @@ const StartupForm = () => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
 
-  const formRef = useRef<HTMLFormElement>(null);
+
   const errorRefs = {
     title: useRef<HTMLInputElement>(null),
     description: useRef<HTMLTextAreaElement>(null),
