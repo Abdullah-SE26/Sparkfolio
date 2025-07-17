@@ -5,12 +5,7 @@ import { parseServerActionResponse } from "@/lib/utils";
 import slugify from "slugify";
 import { writeClient } from "@/sanity/lib/write-client";
 
-export const createPitch = async (
-  state: any,
-  form: FormData
-  state: any,
-  form: FormData
-) => {
+export const createPitch = async (form: FormData) => {
   const session = await auth();
 
   if (!session)
@@ -20,10 +15,10 @@ export const createPitch = async (
     });
 
   const { title, description, category, link } = Object.fromEntries(
-    Array.from(form).filter(([key]) => key !== "pitch"),
+    Array.from(form).filter(([key]) => key !== "pitch")
   );
 
-  const pitch = form.get("pitch") as string; // ✅ Move this up
+  const pitch = form.get("pitch") as string;
 
   const slug = slugify(title as string, { lower: true, strict: true });
 
@@ -33,14 +28,14 @@ export const createPitch = async (
       title,
       description,
       category,
-      image: link, // Ensure this is a valid image URL
+      image: link, // Make sure this is a valid image URL
       slug: {
         _type: "slug",
         current: slug,
       },
       author: {
         _type: "reference",
-        _ref: session.id, // Make sure session.id is your Sanity user ID
+        _ref: session.id, // Your Sanity user ID
       },
       pitch: {
         _type: "markdown",
