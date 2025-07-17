@@ -10,8 +10,7 @@ import { formSchema } from "@/lib/validation";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { createPitch } from "@/lib/action";
-import { useToast } from "@/hooks/use-toast"
-
+import { useToast } from "@/components/hooks/use-toast";
 
 const StartupForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -21,7 +20,6 @@ const StartupForm = () => {
   const { toast } = useToast();
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
-
 
   const errorRefs = {
     title: useRef<HTMLInputElement>(null),
@@ -56,7 +54,7 @@ const StartupForm = () => {
         toast({
           title: "✅ Success",
           description: "Your startup pitch has been created successfully!",
-          duration : 4000,
+          duration: 4000,
         });
 
         formRef.current?.reset();
@@ -68,7 +66,7 @@ const StartupForm = () => {
           title: "❌ Error",
           description: result.error || "Failed to create startup pitch",
           variant: "destructive",
-          duration : 4000,
+          duration: 4000,
         });
       }
     } catch (error) {
