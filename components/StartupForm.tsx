@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Send, Loader2 } from "lucide-react";
 import { formSchema } from "@/lib/validation";
 import { z } from "zod";
-import { useToast } from "../hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { createPitch } from "@/lib/action";
+import { useToast } from "@/hooks/use-toast";
 
 const StartupForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
