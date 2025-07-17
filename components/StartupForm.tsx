@@ -36,25 +36,28 @@ const StartupForm = () => {
       // Clear previous errors
       setErrors({});
 
-      // Extract fields from formDataObj (not local state)
+      // Add pitch to FormData since it's controlled separately
+      formDataObj.set("pitch", pitch);
+
+      // Extract fields from formDataObj for validation
       const formValues = {
         title: formDataObj.get("title") as string,
         description: formDataObj.get("description") as string,
         category: formDataObj.get("category") as string,
         link: formDataObj.get("link") as string,
-        pitch, // pitch is controlled state
+        pitch: formDataObj.get("pitch") as string,
       };
 
       // Validate the form data
       await formSchema.parseAsync(formValues);
 
       // Submit the form
-      const result = await createPitch(prevState, formDataObj, pitch);
+      const result = await createPitch(prevState, formDataObj);
 
       if (result.status === "SUCCESS") {
         toast({
           title: "✅ Success",
-          description: "Your startup pitch has been created.",
+          description: "Your startup pitch has been created successfully!",
         });
 
         // Reset the form
@@ -63,7 +66,7 @@ const StartupForm = () => {
         setErrors({});
 
         // Redirect to the startup page
-        router.push(`/startup/${result.slug.current}`);
+        router.push(`/startup/${result._id}`);
       } else {
         toast({
           title: "❌ Error",
