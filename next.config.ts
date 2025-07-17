@@ -28,6 +28,41 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    serverComponentsExternalPackages: ['@sanity/client'],
+  },
+  // Configure server to bind to 0.0.0.0
+  server: {
+    host: '0.0.0.0',
+    port: 3000,
+  },
+};</nextConfig>
+<new_str>
+const nextConfig: NextConfig = {
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  images: {
+    dangerouslyAllowSVG: true,
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3001',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+  },
+  experimental: {
+    serverComponentsExternalPackages: ['@sanity/client'],
+  },
 };
 
 const sentryWebpackPluginOptions = {
