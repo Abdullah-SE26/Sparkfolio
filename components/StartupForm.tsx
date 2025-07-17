@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useRef, useActionState } from "react";
@@ -19,6 +20,7 @@ const StartupForm = () => {
   const { toast } = useToast();
   const router = useRouter();
 
+  const formRef = useRef<HTMLFormElement>(null);
   const errorRefs = {
     title: useRef<HTMLInputElement>(null),
     description: useRef<HTMLTextAreaElement>(null),
@@ -31,6 +33,9 @@ const StartupForm = () => {
     formDataObj: FormData
   ) => {
     try {
+      // Clear previous errors
+      setErrors({});
+
       // Extract fields from formDataObj (not local state)
       const formValues = {
         title: formDataObj.get("title") as string,
@@ -40,8 +45,10 @@ const StartupForm = () => {
         pitch, // pitch is controlled state
       };
 
+      // Validate the form data
       await formSchema.parseAsync(formValues);
 
+      // Submit the form
       const result = await createPitch(prevState, formDataObj, pitch);
 
       if (result.status === "SUCCESS") {
@@ -50,23 +57,44 @@ const StartupForm = () => {
           description: "Your startup pitch has been created.",
         });
 
-        router.push(`/startup/${result.slug.current}`);
-
-        // Reset pitch only (inputs are uncontrolled, so no reset needed)
+        // Reset the form
+        formRef.current?.reset();
         setPitch("");
         setErrors({});
+
+        // Redirect to the startup page
+        router.push(`/startup/${result.slug.current}`);
+      } else {
+        toast({
+          title: "❌ Error",
+          description: result.error || "Failed to create startup pitch",
+          variant: "destructive",
+        });
       }
 
       return result;
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldErrors = error.flatten().fieldErrors;
-        const formattedErrors = fieldErrors as unknown as Record<string, string>;
+        const formattedErrors: Record<string, string> = {};
+        
+        // Convert array of errors to single string per field
+        Object.keys(fieldErrors).forEach(key => {
+          const errorArray = fieldErrors[key as keyof typeof fieldErrors];
+          if (errorArray && errorArray.length > 0) {
+            formattedErrors[key] = errorArray[0];
+          }
+        });
+
         setErrors(formattedErrors);
 
+        // Scroll to first error
         const firstErrorKey = Object.keys(formattedErrors)[0];
         const firstErrorRef = errorRefs[firstErrorKey as keyof typeof errorRefs];
-        firstErrorRef?.current?.scrollIntoView({ behavior: "smooth" });
+        if (firstErrorRef?.current) {
+          firstErrorRef.current.scrollIntoView({ behavior: "smooth" });
+          firstErrorRef.current.focus();
+        }
 
         toast({
           title: "⚠️ Validation Error",
@@ -77,6 +105,8 @@ const StartupForm = () => {
         return { ...prevState, error: "Validation failed", status: "ERROR" };
       }
 
+      console.error("Form submission error:", error);
+      
       toast({
         title: "❌ Unexpected Error",
         description: "Something went wrong. Please try again later.",
@@ -98,6 +128,7 @@ const StartupForm = () => {
 
   return (
     <form
+      ref={formRef}
       action={formAction}
       className="max-w-2xl mx-auto bg-white p-8 mt-10 rounded-xl border border-zinc-200 shadow-md space-y-8"
     >
@@ -109,7 +140,6 @@ const StartupForm = () => {
           required
           placeholder="Startup Title"
           className="input-style"
-          // No value or onChange here to keep uncontrolled input
         />
       </Field>
 
@@ -121,7 +151,6 @@ const StartupForm = () => {
           required
           placeholder="Startup Description"
           className="input-style"
-          // Uncontrolled too
         />
       </Field>
 
@@ -133,7 +162,6 @@ const StartupForm = () => {
           required
           placeholder="e.g. Tech, Health, Education..."
           className="input-style"
-          // Uncontrolled
         />
       </Field>
 
@@ -145,7 +173,6 @@ const StartupForm = () => {
           required
           placeholder="Startup Image URL"
           className="input-style"
-          // Uncontrolled
         />
       </Field>
 
