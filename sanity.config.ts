@@ -6,7 +6,7 @@
 
 import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
-import {deskTool} from 'sanity/desk' // <--- correct import
+import {deskTool} from 'sanity/desk'
 
 import {markdownSchema} from 'sanity-plugin-markdown'
 

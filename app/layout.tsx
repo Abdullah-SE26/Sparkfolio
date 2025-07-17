@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sparkfolio - startups Hub",
+  title: "Sparkfolio - Startups Hub",
   description: "A startup for your startups.",
 };
 

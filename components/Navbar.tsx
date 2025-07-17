@@ -17,15 +17,15 @@ const Navbar = async () => {
 
           {/* Logo */}
           <Link href="/">
-  <Image
-    src="favicon.ico"
-    alt="Logo"
-    width={60}
-    height={40}
-    className="mix-blend-multiply cursor-pointer"
-    style={{ width: 'auto', height: 'auto' }} 
-  />
-</Link>
+            <Image
+              src="/favicon.ico"
+              alt="Logo"
+              width={60}
+              height={40}
+              className="mix-blend-multiply cursor-pointer"
+              style={{ width: 'auto', height: 'auto' }} 
+            />
+          </Link>
 
         </div>
 
