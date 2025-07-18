@@ -20,12 +20,37 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "*",
       },
-    ],
-  },
+      {
+      protocol: "https",
+      hostname: "cdn.sanity.io", // for Sanity images
+    },
+    {
+      protocol: "https",
+      hostname: "avatars.githubusercontent.com", // GitHub profile images
+    },
+    {
+      protocol: "https",
+      hostname: "randomuser.me", // example avatars
+    },
+    {
+      protocol: "https",
+      hostname: "encrypted-tbn0.gstatic.com", // Google image search
+    },
+    {
+      protocol: "https",
+      hostname: "lh3.googleusercontent.com", // Google profile images
+    },
+    {
+      protocol: "https",
+      hostname: "pbs.twimg.com", // Twitter profile images
+    },
+  ],
+},
 
-  experimental: {
-    serverExternalPackages: ['@sanity/client'],
-  },
+ experimental: {
+  ppr: "incremental",
+},
+
   // REMOVE the 'server' property here, it's invalid for next.config.js
   // 'host' and 'port' should be set elsewhere (e.g., your start script or Docker)
 };
