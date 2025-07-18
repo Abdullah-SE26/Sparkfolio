@@ -13,46 +13,49 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-      images: {
+  images: {
     dangerouslyAllowSVG: true,
+    domains: [
+      "cdn.sanity.io",
+      "avatars.githubusercontent.com",
+      "randomuser.me",
+      "encrypted-tbn0.gstatic.com",
+      "lh3.googleusercontent.com",
+      "pbs.twimg.com",
+    ],
     remotePatterns: [
       {
         protocol: "https",
         hostname: "*",
       },
       {
-      protocol: "https",
-      hostname: "cdn.sanity.io", // for Sanity images
-      pathname: '/images/**',
-    },
-    {
-      protocol: "https",
-      hostname: "avatars.githubusercontent.com", // GitHub profile images
-    },
-    {
-      protocol: "https",
-      hostname: "randomuser.me", // example avatars
-      pathname: '/api/portraits/**',
-    },
-    {
-      protocol: "https",
-      hostname: "encrypted-tbn0.gstatic.com", // Google image search
-    },
-    {
-      protocol: "https",
-      hostname: "lh3.googleusercontent.com", // Google profile images
-    },
-    {
-      protocol: "https",
-      hostname: "pbs.twimg.com", // Twitter profile images
-    },
-  ],
-},
-
-
-
-  // REMOVE the 'server' property here, it's invalid for next.config.js
-  // 'host' and 'port' should be set elsewhere (e.g., your start script or Docker)
+        protocol: "https",
+        hostname: "cdn.sanity.io",
+        pathname: "/images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "randomuser.me",
+        pathname: "/api/portraits/**",
+      },
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+      },
+    ],
+  },
 };
 
 const sentryWebpackPluginOptions = {
