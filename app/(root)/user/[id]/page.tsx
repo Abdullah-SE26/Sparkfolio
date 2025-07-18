@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { client } from "@/sanity/lib/client";
 import { AUTHOR_BY_ID_QUERY } from "@/sanity/lib/queries";
 import { notFound } from "next/navigation";
-import Image from "next/image";
+
 import UserStartups from "@/components/UserStartups";
 import { Suspense } from "react";
 import { StartupCardSkeleton } from "@/components/StartupCard";
@@ -26,7 +26,7 @@ export const experimental_ppr = true;
             </h3>
           </div>
 
-          <Image
+          <img
             src={user.image}
             alt={user.name}
             width={220}

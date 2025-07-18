@@ -37,13 +37,14 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
       {/* Author Info */}
       <div className="flex items-center gap-3 mb-4">
         <Link href={`/user/${author?._id}`}>
-          <Image
+          <img
             src={author?.image || '/default-avatar.png'}
             alt={author?.name || 'Author'}
             width={48}
             height={48}
             className="rounded-full object-cover"
           />
+
         </Link>
         <Link href={`/user/${author?._id}`}>
           <p className="text-[15px] font-medium text-black line-clamp-1">
