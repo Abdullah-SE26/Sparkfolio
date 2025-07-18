@@ -7,15 +7,15 @@ import { auth } from "@/auth";
 
 
 interface HomeProps {
-  searchParams: Record<string, string | string[] | undefined>
+  searchParams?: { query?: string }
 }
 
-  const Home = async ({ searchParams }: HomeProps) => {
-  const query = typeof searchParams.query === "string" ? searchParams.query : "";
+const Home = async ({ searchParams }: HomeProps) => {
+  const query = searchParams?.query ?? null;
   const params = { search: query };
 
   const session = await auth();
-  console.log(session?.id);
+   console.log(session?.id);
 
    
   const {data : posts} = await sanityFetch({query: STARTUPS_QUERY, params});
