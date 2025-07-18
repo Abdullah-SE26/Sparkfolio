@@ -31,11 +31,21 @@ const Page = async ({ params }: PageProps) => {
     client.fetch(PLAYLIST_BY_SLUG_QUERY, { slug: "editor-picks" }),
   ]);
 
- 
-
   if (!post) return notFound();
 
-  const parsedContent = md.render(post?.pitch?.markdown || "");
+ 
+    const pitchMarkdown =
+    typeof post.pitch === "string"
+    ? post.pitch
+    : post?.pitch?.markdown ?? "";
+
+    const parsedContent = md.render(pitchMarkdown);
+
+    console.log("Pitch content:", post.pitch);
+
+
+
+
   const editorPosts = editorPlaylist?.select || [];
 
   return (
@@ -71,7 +81,6 @@ const Page = async ({ params }: PageProps) => {
           className="w-full max-h-[500px] object-cover rounded-xl"
         />
 
-
         <div className="space-y-5 mt-10 max-w-4xl mx-auto">
           {/* Author Info & Category */}
           <div className="flex justify-between items-start flex-wrap gap-5">
@@ -99,19 +108,16 @@ const Page = async ({ params }: PageProps) => {
             </p>
           </div>
 
-          {/* Pitch Content */}
-          <h3 className="text-30-bold">Pitch Details</h3>
-{post.pitch ? (
-  <article
-    className="prose max-w-4xl break-words"
-    dangerouslySetInnerHTML={{ __html: parsedContent }}
-  />
-) : (
-  <p className="text-black-100 text-sm font-normal">
-    No details provided
-  </p>
-)}
-
+          {/* ✅ Pitch Content */}
+          <h3 className="text-30 font-bold">Pitch Details</h3>
+          {parsedContent ? (
+            <article
+              className="prose max-w-4xl font-work-sans break-all"
+              dangerouslySetInnerHTML={{ __html: parsedContent }}
+            />
+          ) : (
+            <p className="no-result">No details provided</p>
+          )}
         </div>
 
         <hr className="border-dotted bg-zinc-400 max-w-4xl my-10 mx-auto" />
