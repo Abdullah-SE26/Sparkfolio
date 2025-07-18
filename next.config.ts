@@ -15,44 +15,32 @@ const nextConfig: NextConfig = {
   },
   images: {
     dangerouslyAllowSVG: true,
-    domains: [
-      "cdn.sanity.io",
-      "avatars.githubusercontent.com",
-      "randomuser.me",
-      "encrypted-tbn0.gstatic.com",
-      "lh3.googleusercontent.com",
-      "pbs.twimg.com",
-    ],
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "*",
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+        pathname: '/images/**',
       },
       {
-        protocol: "https",
-        hostname: "cdn.sanity.io",
-        pathname: "/images/**",
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
       },
       {
-        protocol: "https",
-        hostname: "avatars.githubusercontent.com",
+        protocol: 'https',
+        hostname: 'randomuser.me',
+        pathname: '/api/portraits/**',
       },
       {
-        protocol: "https",
-        hostname: "randomuser.me",
-        pathname: "/api/portraits/**",
+        protocol: 'https',
+        hostname: 'encrypted-tbn0.gstatic.com',
       },
       {
-        protocol: "https",
-        hostname: "encrypted-tbn0.gstatic.com",
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
       },
       {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-      },
-      {
-        protocol: "https",
-        hostname: "pbs.twimg.com",
+        protocol: 'https',
+        hostname: 'pbs.twimg.com',
       },
     ],
   },
