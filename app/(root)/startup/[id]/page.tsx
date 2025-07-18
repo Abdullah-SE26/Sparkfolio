@@ -91,13 +91,14 @@ const Page = async ({ params }: PageProps) => {
               href={`/user/${post.author?._id}`}
               className="flex gap-2 items-center mb-3"
             >
-              <Image
+                <img
                 src={post.author?.image || "/default-avatar.png"}
                 alt="avatar"
                 width={64}
                 height={64}
-                className="rounded-full drop-shadow-lg"
-              />
+                className="rounded-full"
+                />
+
               <div>
                 <p className="text-20-medium">{post.author?.name}</p>
                 <p className="text-16-medium text-black-300">
