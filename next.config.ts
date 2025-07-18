@@ -14,20 +14,26 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    dangerouslyAllowSVG: true,
-    remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '3001',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
-  },
+  dangerouslyAllowSVG: true,
+  remotePatterns: [
+    {
+      protocol: 'http',
+      hostname: 'localhost',
+      port: '3001',
+      pathname: '/**',
+    },
+    {
+      protocol: 'https',
+      hostname: 'cdn.sanity.io',
+      pathname: '/images/**',
+    },
+    {
+      protocol: 'https',
+      hostname: 'randomuser.me', // 👈 THIS is what you're missing
+      pathname: '/api/portraits/**',
+    },
+  ],
+},
   experimental: {
     serverExternalPackages: ['@sanity/client'],
   },
