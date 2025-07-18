@@ -47,9 +47,7 @@ const nextConfig: NextConfig = {
   ],
 },
 
- experimental: {
-  ppr: "incremental",
-},
+
 
   // REMOVE the 'server' property here, it's invalid for next.config.js
   // 'host' and 'port' should be set elsewhere (e.g., your start script or Docker)
