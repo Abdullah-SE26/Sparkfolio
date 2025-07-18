@@ -13,33 +13,15 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-    images: {
-  dangerouslyAllowSVG: true,
-  domains: ['cdn.sanity.io', 'randomuser.me', 'avatars.githubusercontent.com'], // add here
-  remotePatterns: [
-    {
-      protocol: 'http',
-      hostname: 'localhost',
-      port: '3001',
-      pathname: '/**',
-    },
-    {
-      protocol: 'https',
-      hostname: 'cdn.sanity.io',
-      pathname: '/images/**',
-    },
-    {
-      protocol: 'https',
-      hostname: 'randomuser.me',
-      pathname: '/api/portraits/**',
-    },
-    {
-      protocol: 'https',
-      hostname: 'avatars.githubusercontent.com',
-      pathname: '/u/**',
-    },
-  ],
-},
+      images: {
+    dangerouslyAllowSVG: true,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*",
+      },
+    ],
+  },
 
   experimental: {
     serverExternalPackages: ['@sanity/client'],
