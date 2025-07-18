@@ -23,6 +23,7 @@ const nextConfig: NextConfig = {
       {
       protocol: "https",
       hostname: "cdn.sanity.io", // for Sanity images
+      pathname: '/images/**',
     },
     {
       protocol: "https",
@@ -31,6 +32,7 @@ const nextConfig: NextConfig = {
     {
       protocol: "https",
       hostname: "randomuser.me", // example avatars
+      pathname: '/api/portraits/**',
     },
     {
       protocol: "https",
