@@ -33,6 +33,9 @@ const Page = async ({ params }: PageProps) => {
 
   if (!post) return notFound();
 
+  console.log("🖼️ Author image URL:", post.author?.image);
+
+
  
     const pitchMarkdown =
     typeof post.pitch === "string"
